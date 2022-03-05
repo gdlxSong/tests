@@ -109,6 +109,7 @@ export const coreRouters = {
         "method": "get",
         "path": function(eid:string, id:string) {
             var pathString = prefix + "/entities/" + eid + "/mappers/" + id
+            console.log("GetMapper: ", pathString)
             return pathString + buildQuery({})
         },
     },
@@ -122,8 +123,8 @@ export const coreRouters = {
     "RemoveMapper": {
         "method": "delete",
         "path": function(eid:string, id:string) {
-            var pathString = prefix + "/entities/" + eid + "/mappers/" + id
-            return pathString + buildQuery({})
+            var pathString = prefix + "/entities/" + eid + "/mappers/"
+            return pathString + buildQuery({"id": id})
         },
     },
 }

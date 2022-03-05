@@ -92,7 +92,10 @@ it('ListEntity', (done) => {
   request
     .post(coreRouters.ListEntity.path())
     .set("authorization", spiderMan.authorization)
-    .send({})
+    .send({
+      page_num: 1,
+      page_size: 200,
+    })
     .expect(200)
     .then((res) => {
       let result = JSON.parse(res.text);
@@ -163,7 +166,7 @@ it('PatchEntityProps', (done) => {
 
 it('GetEntityProps', (done) => {
   request
-    .get(coreRouters.GetEntity.path("device123"))
+    .get(coreRouters.GetEntityProps.path("device123", ""))
     .set("authorization", spiderMan.authorization)
     .send({temp: 30})
     .expect(200)
@@ -264,7 +267,7 @@ it('PatchEntityConfigs', (done) => {
     .set("authorization", spiderMan.authorization)
     .send([{
       path: "metrics",
-      value: 100,
+      value: 100,// ignore.
       operator: "remove",
     }])
     .expect(200)
@@ -337,7 +340,7 @@ it('AppendMapper', (done) => {
     .send({
       id: "mapper123",
       name:"mapper123name",
-      tql_text: "insert into device123 select device234.temp as temp",
+      tql: "insert into device123 select device234.temp as temp",
     })
     .expect(200)
     .then((res) => {
@@ -367,13 +370,14 @@ it('GetMapper', (done) => {
     .then((res) => {
       let result = JSON.parse(res.text);
       expect(result.code).toBe(successCode)
-
+      console.log("result: ", result)
       // validate entity.
       let entity = result.data
-      expect(entity.id).toBe("device123")
+      expect(entity.entity_id).toBe("device123")
       expect(entity.type).toBe("DEVICE")
       expect(entity.owner).toBe("admin")
       expect(entity.source).toBe("CORE")
+      expect(entity.mapper.id).toBe("mapper123")
       done();
     });
 }, timeout);
@@ -391,7 +395,7 @@ it('ListMapper', (done) => {
 
       // validate entity.
       let entity = result.data
-      expect(entity.id).toBe("device123")
+      expect(entity.entity_id).toBe("device123")
       expect(entity.type).toBe("DEVICE")
       expect(entity.owner).toBe("admin")
       expect(entity.source).toBe("CORE")
@@ -414,7 +418,8 @@ it('RemoveMapper', (done) => {
 
       // validate entity.
       let entity = result.data
-      expect(entity.id).toBe("device123")
+      expect(entity.id).toBe("mapper123")
+      expect(entity.entity_id).toBe("device123")
       expect(entity.type).toBe("DEVICE")
       expect(entity.owner).toBe("admin")
       expect(entity.source).toBe("CORE")
