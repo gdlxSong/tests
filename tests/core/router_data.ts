@@ -1,13 +1,16 @@
+import { formatDiagnostic } from "@tsd/typescript"
 
-const queryBasic = "?type=DEVICE&owner=admin&source=CORE"
+const typeStr = "DEVICE"
+const ownerStr = "admin"
+const sourceStr = "CORE"
 const prefix:string = "/apis/core/v1"
 
 
-function buildQuery(querys:object):string {
-    var queryString = queryBasic
-    for (var key in querys) {
-        if ("" != querys[key]) {
-            queryString = "&" + queryString
+function buildQuery(queries:object):string {
+    var queryString = "?type=" + typeStr + "&owner=" + ownerStr + "&source=" + sourceStr
+    for (var key in queries) {
+        if ("" != queries[key]) {
+            queryString = queryString + "&" + key + "=" + queries[key]
         }
     }
     return queryString
@@ -17,21 +20,25 @@ export const coreRouters = {
     "CreateEntity": {
         "method": "post",
         "path": function(queries:object):string{
-            var pathString = prefix + "/entities?"
-            return pathString + buildQuery(queries)
+            var pathString = prefix + "/entities"
+            pathString = pathString + buildQuery(queries)
+            return pathString
         },
     },
     "UpdateEntity": {
         "method": "put",
-        "path": function(id:string) {return prefix + "/entities/" + id + buildQuery({})},
+        "path": function(id:string): string {
+            var pathString = prefix + "/entities/" + id
+            return pathString + buildQuery({})
+        },
     },
     "GetEntity": {
         "method": "get",
         "path": function(id:string) {return prefix + "/entities/" + id + buildQuery({})},
     },
     "ListEntity": {
-        "method": "get",
-        "path": function() {return prefix + "/entities" + buildQuery({})},
+        "method": "post",
+        "path": function() {return prefix + "/entities/search" + buildQuery({})},
     },
     "DeleteEntity": {
         "method": "delete",
@@ -63,11 +70,17 @@ export const coreRouters = {
     },
     "UpdateEntityConfigs": {
         "method": "put",
-        "path": function(id:string) {return prefix + "/entities/" + id + "/configs" + buildQuery({})},
+        "path": function(id:string) {
+            var pathString = prefix + "/entities/" + id + "/configs" 
+            return pathString + buildQuery({})
+        },
     },
     "PatchEntityConfigs": {
         "method": "put",
-        "path": function(id:string) {return prefix + "/entities/" + id + "/configs/patch" + buildQuery({})},
+        "path": function(id:string) {
+            var pathString = prefix + "/entities/" + id + "/configs/patch"
+            return pathString + buildQuery({})
+        },
     },
     "GetEntityConfigs": {
         "method": "get",
@@ -87,20 +100,30 @@ export const coreRouters = {
     },
     "AppendMapper": {
         "method": "post",
-        "path": function(eid:string){return prefix + "/entities/" + eid + "/mappers"},
+        "path": function(eid:string){
+            var pathString = prefix + "/entities/" + eid + "/mappers" 
+            return pathString + buildQuery({})
+        },
     },
     "GetMapper": {
         "method": "get",
-        "path": function(eid:string, id:string) {return prefix + "/entities/" + eid + "/mappers/" + id},
+        "path": function(eid:string, id:string) {
+            var pathString = prefix + "/entities/" + eid + "/mappers/" + id
+            return pathString + buildQuery({})
+        },
     },
     "ListMapper": {
         "method": "get",
-        "path": function(eid:string) {return prefix + "/entities/" + eid + "/mappers"},
+        "path": function(eid:string) {
+            var pathString = prefix + "/entities/" + eid + "/mappers"
+            return pathString + buildQuery({})
+        },
     },
     "RemoveMapper": {
         "method": "delete",
         "path": function(eid:string, id:string) {
-            return prefix + "/entities/" + eid + "/mappers/" + id
+            var pathString = prefix + "/entities/" + eid + "/mappers/" + id
+            return pathString + buildQuery({})
         },
     },
 }

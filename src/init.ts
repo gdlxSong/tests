@@ -13,17 +13,17 @@ export const request = st(baseURL);
 /**
  * 登录平台
  */
-it("login", (done) => {
-  request
-    .get(`/apis/rudder/v1/oauth2/admin?password=${adminPassword}`)
-    .expect(200)
-    .then((res: any) => {
-      let result = JSON.parse(res.text).data;
-      let authorization = `${result.token_type} ${result.access_token}`;
-      ironMan["authorization"] = authorization;
-      done();
-    });
-});
+// it("login", (done) => {
+//   request
+//     .get(`/apis/rudder/v1/oauth2/admin?password=${adminPassword}`)
+//     .expect(200)
+//     .then((res: any) => {
+//       let result = JSON.parse(res.text).data;
+//       let authorization = `${result.token_type} ${result.access_token}`;
+//       ironMan["authorization"] = authorization;
+//       done();
+//     });
+// }, 3000);
 
 /**
  * 租户登录平台
@@ -38,6 +38,7 @@ it("tenantLogin", (done) => {
             console.log("login return ");
             let result = JSON.parse(res.text).data;
             spiderMan.authorization = `${result.token_type} ${result.access_token}`;
+            console.log(spiderMan)
             done();
         });
-});
+}, 3000);
